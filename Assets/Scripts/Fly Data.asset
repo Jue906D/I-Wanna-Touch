@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flyTime: 0.05
   flySpeed: 1
-  rawGrav: 2
-  minDis: 60
+  rawGrav: 1.4
+  minDis: 50
+  minTime: 3
+  shakeRange: 0

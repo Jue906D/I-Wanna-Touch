@@ -7,5 +7,8 @@ public class FlyData : ScriptableObject
     [SerializeField] public float flySpeed;
     [SerializeField] public float rawGrav;
     [SerializeField] public float minDis;
+    [SerializeField] public float minTime;
+
+    [SerializeField] public float shakeRange;
     //[SerializeField] CharacterType characterType;
 }

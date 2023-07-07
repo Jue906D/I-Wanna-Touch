@@ -11,10 +11,12 @@ public class Movement : MonoBehaviour
     int mouseFrame = 0; //鼠标长按帧数
     bool isHold, isHolding = false;
     Vector2 aposi, fdir;
+    bool timeok = true;
 
     private Collision coll;
     [HideInInspector]
     public Rigidbody2D rb;
+    public GameObject[] orb;
     private AnimationScript anim;
 
     [Space]
@@ -54,7 +56,12 @@ public class Movement : MonoBehaviour
         coll = GetComponent<Collision>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<AnimationScript>();
-        rb.gravityScale = flyData.rawGrav;
+        orb = GameObject.FindGameObjectsWithTag("Flyable");
+        
+
+
+        foreach (GameObject go in orb)
+            go.GetComponent<Rigidbody2D>().gravityScale = flyData.rawGrav;
     }
 
     // Update is called once per frame
@@ -88,14 +95,20 @@ public class Movement : MonoBehaviour
             if(isHolding == true)//结束
             {
                 fdir =new Vector2(Input.mousePosition.x, Input.mousePosition.y) - aposi;
-                if (fdir.magnitude <= flyData.minDis)
+                if (fdir.magnitude <= flyData.minDis && timeok)
                 {
                     //
                 }
                 else 
                 {
-                    rb.velocity += fdir.normalized * flyData.flySpeed / 10 * (fdir.magnitude > mlimit ? 100 : mouseFrame);//1 50 1 
+                    Vector2 temp= fdir.normalized* flyData.flySpeed / 10 * (fdir.magnitude > mlimit ? 100 : mouseFrame);
+                    rb.velocity += temp;//1 50 1 
+                    foreach (GameObject go in orb)
+                    {
+                        go.GetComponent<Rigidbody2D>().velocity += temp;
+                    }
                     StartCoroutine(GravityWait());
+                    StartCoroutine(TimeWait());
 
                 }
                 //Debug.Log(mouseFrame);
@@ -111,107 +124,119 @@ public class Movement : MonoBehaviour
 
         IEnumerator GravityWait()
         {
+            foreach (GameObject go in orb)
+                go.GetComponent<Rigidbody2D>().gravityScale = 0;
             rb.gravityScale = 0;
-
             yield return new WaitForSeconds(flyData.flyTime);
 
+            foreach (GameObject go in orb)
+                go.GetComponent<Rigidbody2D>().gravityScale = flyData.rawGrav;
             rb.gravityScale = flyData.rawGrav;
         }
 
-/*
- * 
-        Walk(dir);
-        anim.SetHorizontalMovement(x, y, rb.velocity.y);
-
-        if (coll.onWall && Input.GetButton("Fire3") && canMove)
+        IEnumerator TimeWait()
         {
-            if(side != coll.wallSide)
-                anim.Flip(side*-1);
-            wallGrab = true;
-            wallSlide = false;
+            timeok = false;
+
+            yield return new WaitForSeconds(flyData.minTime);
+
+            timeok = true;
         }
 
-        if (Input.GetButtonUp("Fire3") || !coll.onWall || !canMove)
-        {
-            wallGrab = false;
-            wallSlide = false;
-        }
+        /*
+         * 
+                Walk(dir);
+                anim.SetHorizontalMovement(x, y, rb.velocity.y);
 
-        if (coll.onGround && !isDashing)
-        {
-            wallJumped = false;
-            GetComponent<BetterJumping>().enabled = true;
-        }
-        
-        if (wallGrab && !isDashing)
-        {
-            rb.gravityScale = 0;
-            if(x > .2f || x < -.2f)
-            rb.velocity = new Vector2(rb.velocity.x, 0);
+                if (coll.onWall && Input.GetButton("Fire3") && canMove)
+                {
+                    if(side != coll.wallSide)
+                        anim.Flip(side*-1);
+                    wallGrab = true;
+                    wallSlide = false;
+                }
 
-            float speedModifier = y > 0 ? .5f : 1;
+                if (Input.GetButtonUp("Fire3") || !coll.onWall || !canMove)
+                {
+                    wallGrab = false;
+                    wallSlide = false;
+                }
 
-            rb.velocity = new Vector2(rb.velocity.x, y * (speed * speedModifier));
-        }
-        else
-        {
-            rb.gravityScale = 3;
-        }
+                if (coll.onGround && !isDashing)
+                {
+                    wallJumped = false;
+                    GetComponent<BetterJumping>().enabled = true;
+                }
 
-        if(coll.onWall && !coll.onGround)
-        {
-            if (x != 0 && !wallGrab)
-            {
-                wallSlide = true;
-                WallSlide();
-            }
-        }
+                if (wallGrab && !isDashing)
+                {
+                    rb.gravityScale = 0;
+                    if(x > .2f || x < -.2f)
+                    rb.velocity = new Vector2(rb.velocity.x, 0);
 
-        if (!coll.onWall || coll.onGround)
-            wallSlide = false;
+                    float speedModifier = y > 0 ? .5f : 1;
 
-        if (Input.GetButtonDown("Jump"))
-        {
-            anim.SetTrigger("jump");
+                    rb.velocity = new Vector2(rb.velocity.x, y * (speed * speedModifier));
+                }
+                else
+                {
+                    rb.gravityScale = 3;
+                }
 
-            if (coll.onGround)
-                Jump(Vector2.up, false);
-            if (coll.onWall && !coll.onGround)
-                WallJump();
-        }
+                if(coll.onWall && !coll.onGround)
+                {
+                    if (x != 0 && !wallGrab)
+                    {
+                        wallSlide = true;
+                        WallSlide();
+                    }
+                }
 
-        if (Input.GetButtonDown("Fire1") && !hasDashed)
-        {
-            if(xRaw != 0 || yRaw != 0)
-                Dash(xRaw, yRaw);
-        }
+                if (!coll.onWall || coll.onGround)
+                    wallSlide = false;
 
-        if (coll.onGround && !groundTouch)
-        {
-            GroundTouch();
-            groundTouch = true;
-        }
+                if (Input.GetButtonDown("Jump"))
+                {
+                    anim.SetTrigger("jump");
 
-        if(!coll.onGround && groundTouch)
-        {
-            groundTouch = false;
-        }
+                    if (coll.onGround)
+                        Jump(Vector2.up, false);
+                    if (coll.onWall && !coll.onGround)
+                        WallJump();
+                }
 
-        WallParticle(y);
+                if (Input.GetButtonDown("Fire1") && !hasDashed)
+                {
+                    if(xRaw != 0 || yRaw != 0)
+                        Dash(xRaw, yRaw);
+                }
 
-        if (wallGrab || wallSlide || !canMove)
-            return;
+                if (coll.onGround && !groundTouch)
+                {
+                    GroundTouch();
+                    groundTouch = true;
+                }
 
-        if(x > 0)
-        {
-            side = 1;
-            anim.Flip(side);
-        }
-        if (x < 0)
-        {
-            side = -1;
-            anim.Flip(side);
-        }*/
+                if(!coll.onGround && groundTouch)
+                {
+                    groundTouch = false;
+                }
+
+                WallParticle(y);
+
+                if (wallGrab || wallSlide || !canMove)
+                    return;
+
+                if(x > 0)
+                {
+                    side = 1;
+                    anim.Flip(side);
+                }
+                if (x < 0)
+                {
+                    side = -1;
+                    anim.Flip(side);
+                }*/
 
 
     }
