@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e80a10e79a4aed4d972eb0aeef1f054, type: 3}
   m_Name: Fly Data
   m_EditorClassIdentifier: 
-  flyTime: 0
-  flySpeed: 0
+  flyTime: 0.05
+  flySpeed: 1
+  rawGrav: 2
+  minDis: 60

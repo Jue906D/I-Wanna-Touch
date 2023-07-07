@@ -88,9 +88,17 @@ public class Movement : MonoBehaviour
             if(isHolding == true)//结束
             {
                 fdir =new Vector2(Input.mousePosition.x, Input.mousePosition.y) - aposi;
-                rb.velocity += fdir.normalized * jumpForce * flyData.flySpeed / 10  *(fdir.magnitude > mlimit?  100 : mouseFrame);
-                StartCoroutine(GravityWait());
-                Debug.Log(mouseFrame);
+                if (fdir.magnitude <= flyData.minDis)
+                {
+                    //
+                }
+                else 
+                {
+                    rb.velocity += fdir.normalized * flyData.flySpeed / 10 * (fdir.magnitude > mlimit ? 100 : mouseFrame);//1 50 1 
+                    StartCoroutine(GravityWait());
+
+                }
+                //Debug.Log(mouseFrame);
                 isHolding = false;
                 isHold = false;
             }
