@@ -6,6 +6,12 @@ using DG.Tweening;
 
 public class Movement : MonoBehaviour
 {
+    [SerializeField] FlyData flyData;
+
+    int mouseFrame = 0; //鼠标长按帧数
+    bool isHold, isHolding = false;
+    Vector2 aposi, fdir;
+
     private Collision coll;
     [HideInInspector]
     public Rigidbody2D rb;
@@ -16,6 +22,7 @@ public class Movement : MonoBehaviour
     public float speed = 10;
     public float jumpForce = 50;
     public float slideSpeed = 5;
+    public float mlimit = 50;
     public float wallJumpLerp = 10;
     public float dashSpeed = 20;
 
@@ -47,6 +54,7 @@ public class Movement : MonoBehaviour
         coll = GetComponent<Collision>();
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<AnimationScript>();
+        rb.gravityScale = flyData.rawGrav;
     }
 
     // Update is called once per frame
@@ -58,6 +66,52 @@ public class Movement : MonoBehaviour
         float yRaw = Input.GetAxisRaw("Vertical");
         Vector2 dir = new Vector2(x, y);
 
+        if (Input.GetMouseButton(0))
+        {
+            if(isHolding == true)
+            {
+                mouseFrame++;//计数
+            }
+            else if(isHold == true) //第一次确认hold
+            {
+                aposi = Input.mousePosition;
+                mouseFrame = 1;
+                isHolding = true;
+            }
+            else //第一次按
+            {
+                isHold = true;
+            }
+        }
+        else//没有按下
+        {
+            if(isHolding == true)//结束
+            {
+                fdir =new Vector2(Input.mousePosition.x, Input.mousePosition.y) - aposi;
+                rb.velocity += fdir.normalized * jumpForce * flyData.flySpeed / 10  *(fdir.magnitude > mlimit?  100 : mouseFrame);
+                StartCoroutine(GravityWait());
+                Debug.Log(mouseFrame);
+                isHolding = false;
+                isHold = false;
+            }
+            else if(isHold == true)
+            {
+                isHold = false;
+            }
+                
+        }
+
+        IEnumerator GravityWait()
+        {
+            rb.gravityScale = 0;
+
+            yield return new WaitForSeconds(flyData.flyTime);
+
+            rb.gravityScale = flyData.rawGrav;
+        }
+
+/*
+ * 
         Walk(dir);
         anim.SetHorizontalMovement(x, y, rb.velocity.y);
 
@@ -149,12 +203,12 @@ public class Movement : MonoBehaviour
         {
             side = -1;
             anim.Flip(side);
-        }
+        }*/
 
 
     }
 
-    void GroundTouch()
+  /*  void GroundTouch()
     {
         hasDashed = false;
         isDashing = false;
@@ -179,9 +233,9 @@ public class Movement : MonoBehaviour
 
         rb.velocity += dir.normalized * dashSpeed;
         StartCoroutine(DashWait());
-    }
+    }*/
 
-    IEnumerator DashWait()
+ /*   IEnumerator DashWait()
     {
         FindObjectOfType<GhostTrail>().ShowGhost();
         StartCoroutine(GroundDash());
@@ -305,5 +359,5 @@ public class Movement : MonoBehaviour
     {
         int particleSide = coll.onRightWall ? 1 : -1;
         return particleSide;
-    }
+    }*/
 }
