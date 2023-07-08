@@ -73,6 +73,16 @@ public class Movement : MonoBehaviour
         float yRaw = Input.GetAxisRaw("Vertical");
         Vector2 dir = new Vector2(x, y);
 
+       /* if(true)
+        {
+            rb.velocity = new Vector2(0, 0);
+            rb.velocity = new Vector2(0, 5);
+            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Ground"), true);
+        }
+        else 
+        {
+            
+        }*/
         if (Input.GetMouseButton(0))
         {
             if(isHolding == true)
