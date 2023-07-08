@@ -8,6 +8,7 @@ using DG.Tweening;
 public class Movement : MonoBehaviour
 {
     [SerializeField] FlyData flyData;
+    [SerializeField] GameObject DeathUI;
     public bool crflag = false;
 
     int mouseFrame = 0; //鼠标长按帧数
@@ -53,7 +54,7 @@ public class Movement : MonoBehaviour
     public ParticleSystem slideParticle;
 
     public CinemachineVirtualCamera cv;
-    public bool isDeath = false;
+    public static bool isDeath = false;
 
     // Start is called before the first frame update
     void Start()
@@ -63,7 +64,7 @@ public class Movement : MonoBehaviour
         anim = GetComponentInChildren<AnimationScript>();
         orb = GameObject.FindGameObjectsWithTag("Flyable");
         isDeath = false;
-
+        
 
         foreach (GameObject go in orb)
             go.GetComponent<Rigidbody2D>().gravityScale = flyData.rawGrav;
@@ -88,6 +89,7 @@ public class Movement : MonoBehaviour
                 cv.Follow = null;
                 Destroy(GetComponent<Collider2D>());
                 StartCoroutine(End());
+
             }
                 
          }
@@ -156,7 +158,9 @@ public class Movement : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             rb.velocity = new Vector2(0, 0);
             
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(2f);
+
+            DeathUI.SetActive(true);
         }
         
         IEnumerator GravityWait()

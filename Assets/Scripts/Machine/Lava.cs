@@ -5,11 +5,13 @@ using UnityEngine;
 public class Lava : MonoBehaviour
 {
 
-    [Space]
-    [Header("Stats")]
-    public Vector2 aim;
-    public float power;
- //   int cpflag;
+    //    [Space]
+    //    [Header("Stats")]
+    //    public Vector2 aim;
+    //    public float power;
+    //   int cpflag;
+
+  //  [SerializeField] Movement move;
 
 
 
@@ -22,7 +24,7 @@ public class Lava : MonoBehaviour
             //if (Vector2.Dot(collision.GetComponent<Movement>().fdir.normalized, aim) > 0.5)
             {
 
-                collision.GetComponent<Rigidbody2D>().velocity += aim * power;  
+                Movement.isDeath = true;
             /*    GameObject.Find("CPpool").GetComponent<CheckPoint>().NextCP();
                 Debug.Log("ok");
                 Destroy(this.gameObject);*/
