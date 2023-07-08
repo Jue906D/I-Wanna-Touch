@@ -8,6 +8,7 @@ public class AnimationScript : MonoBehaviour
     private Animator anim;
     private Movement move;
     private Collision coll;
+    private Rigidbody2D rb;
     [HideInInspector]
     public SpriteRenderer sr;
 
@@ -16,18 +17,19 @@ public class AnimationScript : MonoBehaviour
         anim = GetComponent<Animator>();
         coll = GetComponentInParent<Collision>();
         move = GetComponentInParent<Movement>();
+        rb = GetComponentInParent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-    /*    anim.SetBool("onGround", coll.onGround);
-        anim.SetBool("onWall", coll.onWall);
-        anim.SetBool("onRightWall", coll.onRightWall);
-        anim.SetBool("wallGrab", move.wallGrab);
-        anim.SetBool("wallSlide", move.wallSlide);
-        anim.SetBool("canMove", move.canMove);
-        anim.SetBool("isDashing", move.isDashing);*/
+        anim.SetBool("onGround", coll.onGround);
+//        anim.SetBool("onWall", coll.onWall);
+//        anim.SetBool("onRightWall", coll.onRightWall);
+//        anim.SetBool("wallGrab", move.wallGrab);
+//        anim.SetBool("wallSlide", move.wallSlide);
+//        anim.SetBool("canMove", move.canMove);
+        anim.SetBool("onFall", rb.velocity.y < 0);
 
     }
 
