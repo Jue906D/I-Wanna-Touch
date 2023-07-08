@@ -31,7 +31,7 @@ public class CheckPoint : MonoBehaviour
         //                                        0.5f);
         //} while (IsOverlapping(randomPosition));
         //carrot = Instantiate(prefab, randomPosition, Quaternion.identity);
-        carrot[curcp - 1].SetActive(true);
+        //carrot[curcp - 1].SetActive(true);
         //objectPositions.Add(randomPosition);
     }
 
@@ -57,7 +57,7 @@ public class CheckPoint : MonoBehaviour
     {
         curcp = 0;
         cpflag = 0;
-        GameObject[] carrot = GameObject.FindGameObjectsWithTag("carrot");
+        //GameObject[] carrot = GameObject.FindGameObjectsWithTag("carrot");
         //GenerateObjects();
     }
 
