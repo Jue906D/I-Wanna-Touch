@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5e80a10e79a4aed4d972eb0aeef1f054, type: 3}
-  m_Name: Fly Data
+  m_Name: Fly Data_Louna
   m_EditorClassIdentifier: 
-  flyTime: 2.5
-  flySpeed: 0.15
-  rawGrav: 0.15
-  minDis: 50
-  minTime: 3
+  flyTime: 0.3
+  flySpeed: 0.6
+  rawGrav: 0.5
+  minDis: 20
+  minTime: 2
   shakeRange: 0
-  startRadius: 0.5
+  startRadius: 0.3
