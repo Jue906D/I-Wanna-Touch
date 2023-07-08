@@ -99,7 +99,11 @@ public class Movement : MonoBehaviour
                 {
                     //
                 }
-                else 
+                else if (coll.onGround && fdir.normalized.y <= flyData.startRadius)
+                {
+
+                }
+                else
                 {
                     Vector2 temp= fdir.normalized* flyData.flySpeed / 10 * (fdir.magnitude > mlimit ? 100 : mouseFrame);
                     rb.velocity += temp;//1 50 1 

@@ -10,5 +10,6 @@ public class FlyData : ScriptableObject
     [SerializeField] public float minTime;
 
     [SerializeField] public float shakeRange;
+    [SerializeField] public float startRadius;
     //[SerializeField] CharacterType characterType;
 }
