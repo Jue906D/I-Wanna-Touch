@@ -15,16 +15,24 @@ public class CheckPoint : MonoBehaviour
     
     public void NextCP()
     {
-        curcp++;
-        Debug.Log(curcp);
-       //do
+        if(curcp == 5)
+        {
+            Movement.isWin = true;
+        }
+        else 
+        {
+            curcp++;
+        }
+        //Debug.Log(curcp);
+        //do
         //{
-            Vector3 randomPosition = new Vector3(Random.Range(-areaWidth / 2, areaWidth / 2),
-                                                 Random.Range(-areaLength / 2, areaLength / 2),
-                                                 0.5f);
+        //    Vector3 randomPosition = new Vector3(Random.Range(-areaWidth / 2, areaWidth / 2),
+        //                                         Random.Range(-areaLength / 2, areaLength / 2),
+        //                                        0.5f);
         //} while (IsOverlapping(randomPosition));
-        carrot = Instantiate(prefab, randomPosition, Quaternion.identity);
-        objectPositions.Add(randomPosition);
+        //carrot = Instantiate(prefab, randomPosition, Quaternion.identity);
+        carrot[curcp - 1].SetActive(true);
+        //objectPositions.Add(randomPosition);
     }
 
    /* public IEnumerator waitit()
@@ -42,14 +50,15 @@ public class CheckPoint : MonoBehaviour
 
     void Awake()
     {
-       
+        
     }
 
     void Start()
     {
         curcp = 0;
         cpflag = 0;
-        GenerateObjects();
+        GameObject[] carrot = GameObject.FindGameObjectsWithTag("carrot");
+        //GenerateObjects();
     }
 
     void GenerateObjects()
