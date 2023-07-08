@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13b75c95f34a00d4e8c04f76b73312e6, type: 3}
+  m_Name: drill_right
+  m_EditorClassIdentifier: 
+  m_AnimatedSprites:
+  - {fileID: 21300000, guid: 7ebcbad090b82cb41babcb5bb86a8189, type: 3}
+  - {fileID: 21300000, guid: dbf7d298f6dd2d04bb0c76f68f200758, type: 3}
+  - {fileID: 21300000, guid: bec6da98bf215c64f873fcad63b0e9aa, type: 3}
+  - {fileID: 21300000, guid: d69ad561db6ea754fbc234f223423025, type: 3}
+  - {fileID: 21300000, guid: 499d4764a43fdca4a952e2da3b0161e6, type: 3}
+  m_MinSpeed: 5
+  m_MaxSpeed: 5
+  m_AnimationStartTime: 0
+  m_AnimationStartFrame: 0
+  m_TileColliderType: 0

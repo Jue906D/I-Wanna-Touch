@@ -1,4 +1,5 @@
 ﻿using System;
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,7 @@ using DG.Tweening;
 public class Movement : MonoBehaviour
 {
     [SerializeField] FlyData flyData;
+    public bool crflag = false;
 
     int mouseFrame = 0; //鼠标长按帧数
     public bool isHold, isHolding = false;
@@ -50,6 +52,9 @@ public class Movement : MonoBehaviour
     public ParticleSystem wallJumpParticle;
     public ParticleSystem slideParticle;
 
+    public CinemachineVirtualCamera cv;
+    public bool isDeath = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,12 +62,14 @@ public class Movement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponentInChildren<AnimationScript>();
         orb = GameObject.FindGameObjectsWithTag("Flyable");
-        
+        isDeath = false;
 
 
         foreach (GameObject go in orb)
             go.GetComponent<Rigidbody2D>().gravityScale = flyData.rawGrav;
     }
+
+  
 
     // Update is called once per frame
     void Update()
@@ -73,69 +80,85 @@ public class Movement : MonoBehaviour
         float yRaw = Input.GetAxisRaw("Vertical");
         Vector2 dir = new Vector2(x, y);
 
-       /* if(true)
-        {
-            rb.velocity = new Vector2(0, 0);
-            rb.velocity = new Vector2(0, 5);
-            Physics2D.IgnoreLayerCollision(LayerMask.NameToLayer("Player"), LayerMask.NameToLayer("Ground"), true);
-        }
-        else 
-        {
-            
-        }*/
-        if (Input.GetMouseButton(0))
-        {
-            if(isHolding == true)
+         if(isDeath)
+         {
+            if(crflag==false)
             {
-                mouseFrame++;//计数
-            }
-            else if(isHold == true) //第一次确认hold
-            {
-                aposi = Input.mousePosition;
-                mouseFrame = 1;
-                isHolding = true;
-            }
-            else //第一次按
-            {
-                isHold = true;
-            }
-        }
-        else//没有按下
-        {
-            if(isHolding == true)//结束
-            {
-                fdir =new Vector2(Input.mousePosition.x, Input.mousePosition.y) - aposi;
-                if (fdir.magnitude <= flyData.minDis && timeok)
-                {
-                    //
-                }
-                else if (coll.onGround && fdir.normalized.y <= flyData.startRadius)
-                {
-
-                }
-                else
-                {
-                    Vector2 temp= fdir.normalized* flyData.flySpeed / 10 * (fdir.magnitude > mlimit ? 100 : mouseFrame);
-                    rb.velocity += temp;//1 50 1 
-                    foreach (GameObject go in orb)
-                    {
-                        go.GetComponent<Rigidbody2D>().velocity += temp;
-                    }
-                    StartCoroutine(GravityWait());
-                    StartCoroutine(TimeWait());
-
-                }
-                //Debug.Log(mouseFrame);
-                isHolding = false;
-                isHold = false;
-            }
-            else if(isHold == true)
-            {
-                isHold = false;
+                anim.anim.SetBool("onDeath", true);
+                cv.Follow = null;
+                Destroy(GetComponent<Collider2D>());
+                StartCoroutine(End());
             }
                 
-        }
+         }
+         else 
+         {
+            if (Input.GetMouseButton(0))
+            {
+                if (isHolding == true)
+                {
+                    mouseFrame++;//计数
+                }
+                else if (isHold == true) //第一次确认hold
+                {
+                    aposi = Input.mousePosition;
+                    mouseFrame = 1;
+                    isHolding = true;
+                }
+                else //第一次按
+                {
+                    isHold = true;
+                }
+            }
+            else//没有按下
+            {
+                if (isHolding == true)//结束
+                {
+                    fdir = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - aposi;
+                    if (fdir.magnitude <= flyData.minDis && timeok)
+                    {
+                        //
+                    }
+                    else if (coll.onGround && fdir.normalized.y <= flyData.startRadius)
+                    {
 
+                    }
+                    else
+                    {
+                        Vector2 temp = fdir.normalized * flyData.flySpeed / 10 * (fdir.magnitude > mlimit ? 100 : mouseFrame);
+                        rb.velocity += temp;//1 50 1 
+                        foreach (GameObject go in orb)
+                        {
+                            go.GetComponent<Rigidbody2D>().velocity += temp;
+                        }
+                        StartCoroutine(GravityWait());
+                        StartCoroutine(TimeWait());
+
+                    }
+                    //Debug.Log(mouseFrame);
+                    isHolding = false;
+                    isHold = false;
+                }
+                else if (isHold == true)
+                {
+                    isHold = false;
+                }
+
+            }
+        }
+        
+
+        IEnumerator End()
+        {
+            crflag = true;
+            
+            rb.velocity = new Vector2(0, 5);
+            yield return new WaitForSeconds(0.5f);
+            rb.velocity = new Vector2(0, 0);
+            
+            yield return new WaitForSeconds(0.5f);
+        }
+        
         IEnumerator GravityWait()
         {
             foreach (GameObject go in orb)

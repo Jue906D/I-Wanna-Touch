@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnimationScript : MonoBehaviour
 {
 
-    private Animator anim;
+    public Animator anim;
     private Movement move;
     private Collision coll;
     private Rigidbody2D rb;
@@ -29,8 +29,13 @@ public class AnimationScript : MonoBehaviour
 //        anim.SetBool("wallGrab", move.wallGrab);
 //        anim.SetBool("wallSlide", move.wallSlide);
 //        anim.SetBool("canMove", move.canMove);
-        anim.SetBool("onFall", rb.velocity.y < 0);
+        anim.SetBool("onFall", rb.velocity.y < 0);           
 
+    }
+
+    public void Death()
+    {
+        anim.SetBool("onDeath", true);
     }
 
     public void SetHorizontalMovement(float x,float y, float yVel)
