@@ -18,4 +18,4 @@ MonoBehaviour:
   minDis: 20
   minTime: 2
   shakeRange: 0
-  startRadius: 0.3
+  startRadius: 0.2
