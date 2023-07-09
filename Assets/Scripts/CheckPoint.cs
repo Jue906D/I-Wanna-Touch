@@ -9,8 +9,13 @@ public class CheckPoint : MonoBehaviour
     public Vector3 randomPosition;
     public int cpflag;
 
+    [SerializeField] GameObject carrot1;
+    [SerializeField] GameObject carrot2;
+    [SerializeField] GameObject carrot3;
+    [SerializeField] GameObject carrot4;
+    [SerializeField] GameObject carrot5;
 
-    GameObject carrot;
+    GameObject[] carrot;
     int curcp;
     
     public void NextCP()
@@ -31,7 +36,8 @@ public class CheckPoint : MonoBehaviour
         //                                        0.5f);
         //} while (IsOverlapping(randomPosition));
         //carrot = Instantiate(prefab, randomPosition, Quaternion.identity);
-        //carrot[curcp - 1].SetActive(true);
+        Debug.Log(curcp);
+        carrot[curcp - 1].gameObject.SetActive(true);
         //objectPositions.Add(randomPosition);
     }
 
@@ -50,14 +56,14 @@ public class CheckPoint : MonoBehaviour
 
     void Awake()
     {
-        
+        GameObject[] carrot = { carrot1, carrot2, carrot3, carrot4, carrot5 };
     }
 
     void Start()
     {
         curcp = 0;
         cpflag = 0;
-        //GameObject[] carrot = GameObject.FindGameObjectsWithTag("carrot");
+        
         //GenerateObjects();
     }
 
@@ -75,7 +81,7 @@ public class CheckPoint : MonoBehaviour
                                                  0.5f);
             }
             cpflag++;
-            carrot =Instantiate(prefab, randomPosition, Quaternion.identity);
+            //carrot =Instantiate(prefab, randomPosition, Quaternion.identity);
             objectPositions.Add(randomPosition);
         }
     }

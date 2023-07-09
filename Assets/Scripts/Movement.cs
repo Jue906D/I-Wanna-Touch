@@ -9,11 +9,14 @@ public class Movement : MonoBehaviour
 {
     [SerializeField] FlyData flyData;
     [SerializeField] GameObject DeathUI;
+    [SerializeField] GameObject wind;
     public bool crflag = false;
 
     int mouseFrame = 0; //鼠标长按帧数
     public bool isHold, isHolding = false;
     public Vector2 aposi, fdir;
+    public static Vector2 wdir;
+
     public bool timeok = true;
 
     private Collision coll;
@@ -56,6 +59,7 @@ public class Movement : MonoBehaviour
     public CinemachineVirtualCamera cv;
     public static bool isDeath = false;
     public static bool isWin = false;
+    public static bool isWind = false;
 
     // Start is called before the first frame update
     void Start()
@@ -65,8 +69,8 @@ public class Movement : MonoBehaviour
         anim = GetComponentInChildren<AnimationScript>();
         orb = GameObject.FindGameObjectsWithTag("Flyable");
         isDeath = false;
-        
-
+        isWind = false;
+        isWin = false;
         foreach (GameObject go in orb)
             go.GetComponent<Rigidbody2D>().gravityScale = flyData.rawGrav;
     }
@@ -118,6 +122,9 @@ public class Movement : MonoBehaviour
                 if (isHolding == true)//结束
                 {
                     fdir = new Vector2(Input.mousePosition.x, Input.mousePosition.y) - aposi;
+                    wdir = fdir.normalized;
+                    if(isWind == false)
+                        StartCoroutine(wind.GetComponent<Wind>().goWind());
                     if (fdir.magnitude <= flyData.minDis && timeok)
                     {
                         //
